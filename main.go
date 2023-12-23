@@ -3,18 +3,13 @@ package main
 import (
 	"fmt"
 
+	"github.com/cimple-admin/admin/internal/config"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 )
 
 func init() {
-	viper.SetConfigType("env")
-	viper.SetConfigName(".env")
-	viper.AddConfigPath(".")
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic("read env file fail")
-	}
+	config.Init()
 }
 
 func main() {
