@@ -7,11 +7,17 @@ import (
 	"github.com/spf13/viper"
 )
 
-func main() {
+func init() {
 	viper.SetConfigType("env")
 	viper.SetConfigName(".env")
 	viper.AddConfigPath(".")
-	viper.ReadInConfig()
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic("read env file fail")
+	}
+}
+
+func main() {
 	l := viper.GetString("Listen")
 	fmt.Println("l:" + l)
 
