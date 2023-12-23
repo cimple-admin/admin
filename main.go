@@ -1,9 +1,8 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/cimple-admin/admin/internal/config"
+	"github.com/cimple-admin/admin/internal/model"
 	"github.com/cimple-admin/admin/internal/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -11,11 +10,11 @@ import (
 
 func init() {
 	config.Init()
+	model.Init()
 }
 
 func main() {
 	lis := viper.GetString("LISTEN")
-	fmt.Println("l:" + lis)
 
 	app := fiber.New()
 
