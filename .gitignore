@@ -2,3 +2,5 @@ tmp/*
 tmp
 tmp/main
 tmp/build-errors.log
+.idea/*
+.idea
