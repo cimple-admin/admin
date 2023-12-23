@@ -2,7 +2,7 @@ package model
 
 type User struct {
 	BaseModel
-	Name  string `gorm:"default:'', not null"`
-	Email string `gorm:"unique"`
-	Cover string `gorm:"default:'', not null"`
+	Name  string `gorm:"not null"`
+	Email string `gorm:"not null;unique"`
+	Cover string `gorm:"not null"`
 }

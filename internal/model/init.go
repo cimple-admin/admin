@@ -8,6 +8,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 func Init() {
 	host := viper.GetString("DB_HOST")
 	port := viper.GetString("DB_PORT")
@@ -20,7 +22,8 @@ func Init() {
 	dsn := user + ":" + pass + "@tcp(" + host + ":" + port + ")/" +
 		name + "?charset=" + charset + "&parseTime=True&loc=" + url.QueryEscape(loc)
 
-	db, err := gorm.Open(mysql.New(mysql.Config{
+	var err error
+	DB, err = gorm.Open(mysql.New(mysql.Config{
 		DSN:                       dsn,   // DSN data source name
 		DefaultStringSize:         256,   // string 类型字段的默认长度
 		DisableDatetimePrecision:  true,  // 禁用 datetime 精度，MySQL 5.6 之前的数据库不支持
@@ -33,5 +36,5 @@ func Init() {
 		panic("conn mysql fail: " + err.Error())
 	}
 
-	viper.Set("DB", db)
+	DB.AutoMigrate(&User{})
 }
