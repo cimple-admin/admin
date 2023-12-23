@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cimple-admin/admin/internal/config"
+	"github.com/cimple-admin/admin/internal/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 )
@@ -18,9 +19,7 @@ func main() {
 
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	router.RegisterCommon(app)
 
 	app.Listen(lis)
 }
