@@ -13,8 +13,8 @@ func init() {
 }
 
 func main() {
-	l := viper.GetString("Listen")
-	fmt.Println("l:" + l)
+	lis := viper.GetString("LISTEN")
+	fmt.Println("l:" + lis)
 
 	app := fiber.New()
 
@@ -22,5 +22,5 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
-	app.Listen(l)
+	app.Listen(lis)
 }
