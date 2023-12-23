@@ -20,6 +20,7 @@ func main() {
 	app := fiber.New()
 
 	router.RegisterCommon(app)
+	router.RegisterAuth(app)
 
 	app.Listen(lis)
 }
