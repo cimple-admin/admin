@@ -24,7 +24,7 @@ func Register(ctx *fiber.Ctx) error {
 	if !v.Validate() {
 		ctx.JSON(fiber.Map{
 			"status": -2,
-			"email":  v.Errors,
+			"error":  v.Errors.One(),
 		})
 	}
 
