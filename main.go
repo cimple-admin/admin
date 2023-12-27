@@ -4,6 +4,7 @@ import (
 	"github.com/cimple-admin/admin/internal/config"
 	"github.com/cimple-admin/admin/internal/model"
 	"github.com/cimple-admin/admin/internal/router"
+	"github.com/cimple-admin/admin/internal/validate"
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -13,6 +14,7 @@ import (
 func init() {
 	config.Init()
 	model.Init()
+	validate.Init()
 }
 
 func main() {

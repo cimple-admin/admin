@@ -3,7 +3,6 @@ package auth
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
-	"github.com/gookit/validate/locales/zhcn"
 )
 
 type user struct {
@@ -20,7 +19,7 @@ func Register(ctx *fiber.Ctx) error {
 			"error":  err.Error(),
 		})
 	}
-	zhcn.RegisterGlobal()
+
 	v := validate.Struct(u)
 	if !v.Validate() {
 		ctx.JSON(fiber.Map{
@@ -28,13 +27,6 @@ func Register(ctx *fiber.Ctx) error {
 			"email":  v.Errors,
 		})
 	}
-	// v := validate.Validate
-	// if errs := v.Struct(u); errs != nil {
-	// 	return ctx.JSON(fiber.Map{
-	// 		"status": -2,
-	// 		"error":  validate.Errors(errs),
-	// 	})
-	// }
 
 	return nil
 }
