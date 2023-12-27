@@ -7,7 +7,7 @@ import (
 
 type user struct {
 	Email  string `json:"email" xml:"email" form:"email" validate:"required|email" label:"邮箱"`
-	Pass   string `json:"pass" xml:"pass" form:"pass" validate:"required|minLength:5|maxLength:20" label:"密码"`
+	Pass   string `json:"pass" xml:"pass" form:"pass" validate:"required|minLength:5|maxLength:20|password" label:"密码"`
 	RePass string `json:"repass" xml:"repass" form:"repass" validate:"required|eq_field:Pass" label:"确认密码"`
 }
 
