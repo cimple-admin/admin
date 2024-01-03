@@ -7,6 +7,7 @@ import (
 	"github.com/cimple-admin/admin/internal/validate"
 	"github.com/gofiber/contrib/fiberi18n/v2"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/spf13/viper"
 	"golang.org/x/text/language"
 )
@@ -29,6 +30,9 @@ func main() {
 			DefaultLanguage: language.Chinese,
 		}),
 	)
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:5173",
+	}))
 
 	router.Register(app)
 

@@ -1,7 +1,10 @@
 package auth
 
 import (
+	"errors"
+
 	"github.com/cimple-admin/admin/internal/model"
+	"github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
 	"golang.org/x/crypto/bcrypt"
@@ -24,7 +27,7 @@ func Register(ctx *fiber.Ctx) error {
 
 	v := validate.Struct(u)
 	if !v.Validate() {
-		ctx.JSON(fiber.Map{
+		return ctx.JSON(fiber.Map{
 			"status":  -2,
 			"message": v.Errors.One(),
 		})
@@ -32,7 +35,7 @@ func Register(ctx *fiber.Ctx) error {
 
 	password, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 	if err != nil {
-		ctx.JSON(fiber.Map{
+		return ctx.JSON(fiber.Map{
 			"status":  -3,
 			"message": err,
 		})
@@ -41,10 +44,18 @@ func Register(ctx *fiber.Ctx) error {
 	result := model.DB.Create(&user)
 
 	if result.Error != nil {
-		ctx.JSON(fiber.Map{
-			"status":  -4,
-			"message": result.Error,
-		})
+		var mysqlErr *mysql.MySQLError
+		if errors.As(result.Error, &mysqlErr) && mysqlErr.Number == 1062 {
+			return ctx.JSON(fiber.Map{
+				"status":  -4,
+				"message": "用户名已存在",
+			})
+		} else {
+			return ctx.JSON(fiber.Map{
+				"status":  -4,
+				"message": result.Error.Error(),
+			})
+		}
 	}
 
 	return ctx.JSON(fiber.Map{
