@@ -31,7 +31,7 @@ func main() {
 		}),
 	)
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:5173",
+		AllowOrigins: viper.GetString("CORS_ALLOW_ORIGIN"),
 	}))
 
 	router.Register(app)
