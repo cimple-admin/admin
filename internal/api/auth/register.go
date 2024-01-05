@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/cimple-admin/admin/internal/model"
@@ -62,7 +63,7 @@ func Register(ctx *fiber.Ctx) error {
 	}
 
 	// 注册成功后，生成 token 并返回
-	encryptedToken, err := pasetoware.CreateToken([]byte(viper.GetString("PASETOKEY")), string(user.ID), 12*time.Hour, pasetoware.PurposeLocal)
+	encryptedToken, err := pasetoware.CreateToken([]byte(viper.GetString("PASETOKEY")), strconv.FormatUint(uint64(user.ID), 10), 12*time.Hour, pasetoware.PurposeLocal)
 	if err != nil {
 		return ctx.JSON(fiber.Map{
 			"status":  -5,
