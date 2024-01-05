@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/cimple-admin/admin/internal/model"
+	"github.com/cimple-admin/admin/internal/response/json"
 	"github.com/go-sql-driver/mysql"
 	pasetoware "github.com/gofiber/contrib/paseto"
 	"github.com/gofiber/fiber/v2"
@@ -23,26 +24,17 @@ type user struct {
 func Register(ctx *fiber.Ctx) error {
 	u := new(user)
 	if err := ctx.BodyParser(u); err != nil {
-		return ctx.JSON(fiber.Map{
-			"status":  -1,
-			"message": err.Error(),
-		})
+		return json.Fail(ctx, -1, err.Error())
 	}
 
 	v := validate.Struct(u)
 	if !v.Validate() {
-		return ctx.JSON(fiber.Map{
-			"status":  -2,
-			"message": v.Errors.One(),
-		})
+		return json.Fail(ctx, -2, v.Errors.One())
 	}
 
 	password, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 	if err != nil {
-		return ctx.JSON(fiber.Map{
-			"status":  -3,
-			"message": err,
-		})
+		return json.Fail(ctx, -3, err.Error())
 	}
 	user := model.User{Email: u.Email, Password: string(password), Name: u.Email}
 	result := model.DB.Create(&user)
@@ -50,30 +42,17 @@ func Register(ctx *fiber.Ctx) error {
 	if result.Error != nil {
 		var mysqlErr *mysql.MySQLError
 		if errors.As(result.Error, &mysqlErr) && mysqlErr.Number == 1062 {
-			return ctx.JSON(fiber.Map{
-				"status":  -4,
-				"message": "用户名已存在",
-			})
+			return json.Fail(ctx, -4, "用户名已存在")
 		} else {
-			return ctx.JSON(fiber.Map{
-				"status":  -4,
-				"message": result.Error.Error(),
-			})
+			return json.Fail(ctx, -4, result.Error.Error())
 		}
 	}
 
 	// 注册成功后，生成 token 并返回
 	encryptedToken, err := pasetoware.CreateToken([]byte(viper.GetString("PASETOKEY")), strconv.FormatUint(uint64(user.ID), 10), 12*time.Hour, pasetoware.PurposeLocal)
 	if err != nil {
-		return ctx.JSON(fiber.Map{
-			"status":  -5,
-			"message": "generateTokenError",
-		})
+		return json.Fail(ctx, -5, "generateTokenError")
 	}
 
-	return ctx.JSON(fiber.Map{
-		"status":  0,
-		"message": "注册成功",
-		"data":    encryptedToken,
-	})
+	return json.SuccessData(ctx, "注册成功", encryptedToken)
 }
