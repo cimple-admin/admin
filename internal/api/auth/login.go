@@ -1,16 +1,10 @@
 package auth
 
 import (
-	"fmt"
-	"strconv"
-	"time"
-
 	"github.com/cimple-admin/admin/internal/model"
 	"github.com/cimple-admin/admin/internal/response/json"
-	pasetoware "github.com/gofiber/contrib/paseto"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
-	"github.com/spf13/viper"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -40,10 +34,10 @@ func Login(ctx *fiber.Ctx) error {
 		return json.Fail(ctx, -4, "密码不正确")
 	}
 
-	encryptedToken, err := pasetoware.CreateToken([]byte(viper.GetString("PASETOKEY")), strconv.FormatUint(uint64(user.ID), 10), 12*time.Hour, pasetoware.PurposeLocal)
+	encryptedToken, err := generateToken(user.ID)
 	if err != nil {
 		return json.Fail(ctx, -5, "generateTokenError")
 	}
-	fmt.Println("encryptedToken", encryptedToken)
+
 	return json.SuccessData(ctx, "登录成功", encryptedToken)
 }

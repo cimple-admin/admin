@@ -2,16 +2,12 @@ package auth
 
 import (
 	"errors"
-	"strconv"
-	"time"
 
 	"github.com/cimple-admin/admin/internal/model"
 	"github.com/cimple-admin/admin/internal/response/json"
 	"github.com/go-sql-driver/mysql"
-	pasetoware "github.com/gofiber/contrib/paseto"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/validate"
-	"github.com/spf13/viper"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -49,7 +45,7 @@ func Register(ctx *fiber.Ctx) error {
 	}
 
 	// 注册成功后，生成 token 并返回
-	encryptedToken, err := pasetoware.CreateToken([]byte(viper.GetString("PASETOKEY")), strconv.FormatUint(uint64(user.ID), 10), 12*time.Hour, pasetoware.PurposeLocal)
+	encryptedToken, err := generateToken(user.ID)
 	if err != nil {
 		return json.Fail(ctx, -5, "generateTokenError")
 	}
