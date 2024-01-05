@@ -15,14 +15,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type user struct {
+type register struct {
 	Email           string `json:"email" xml:"email" form:"email" validate:"required|email" label:"邮箱"`
 	Password        string `json:"password" xml:"password" form:"password" validate:"required|minLength:5|maxLength:20|password" label:"密码"`
 	ConfirmPassword string `json:"confirm_password" xml:"confirm_password" form:"confirm_password" validate:"required|eq_field:Password" label:"确认密码"`
 }
 
 func Register(ctx *fiber.Ctx) error {
-	u := new(user)
+	u := new(register)
 	if err := ctx.BodyParser(u); err != nil {
 		return json.Fail(ctx, -1, err.Error())
 	}
